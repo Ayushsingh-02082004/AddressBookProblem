@@ -19,6 +19,8 @@ namespace AddressManagemement.services
 
         public void deleteContact(String firstname)
         {
+
+            //HI THIS IS DELETE FILE 
             if (contact == null || firstname == null)
             {
                 Console.WriteLine("No contact available.");
