@@ -16,6 +16,39 @@ namespace AddressManagemement.Entity
             Console.WriteLine("Contact added successfully");
         }
 
+        public void editContact(String firstname)
+        {
+            if(firstname == null || contact == null)
+            {
+                Console.WriteLine("No contact available.");
+                return;
+            }
+            if (contact.FirstName.Equals(firstname , StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("Editing Contact Details:");
+
+                Console.Write("Enter New Address: ");
+                contact.Address = Console.ReadLine();
+
+                Console.Write("Enter New City: ");
+                contact.City = Console.ReadLine();
+
+                Console.Write("Enter New State: ");
+                contact.State = Console.ReadLine();
+
+                Console.Write("Enter New Zip Code: ");
+                contact.ZipCode = Console.ReadLine();
+
+                Console.Write("Enter New Phone Number: ");
+                contact.PhoneNumber = Console.ReadLine();
+
+                Console.Write("Enter New Email: ");
+                contact.Email = Console.ReadLine();
+
+                Console.WriteLine("\nContact updated successfully.");
+            }
+            else Console.WriteLine("There is no contact of this .");
+        }
         public void DisplayContact()
         {
             if (contact == null)
