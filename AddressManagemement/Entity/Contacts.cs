@@ -78,8 +78,8 @@ namespace AddressManagemement.Entity
             get { return email; }
             set
             {
-                string pattern = @"[\W._%+-]+@[\W.-]+\.[a-zA-Z]{2,}$";
-                if(Regex.IsMatch(value , pattern))
+                string pattern = @"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$";
+                if (Regex.IsMatch(value , pattern))
                 {
                     email = value;
                 }
