@@ -1,10 +1,11 @@
-﻿using System;
+﻿using AddressManagemement.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AddressManagemement.Entity
+namespace AddressManagemement.services
 {
     internal class AdressBook
     {
@@ -14,6 +15,21 @@ namespace AddressManagemement.Entity
         {
             contact = person;
             Console.WriteLine("Contact added successfully");
+        }
+
+        public void deleteContact(String firstname)
+        {
+            if (contact == null || firstname == null)
+            {
+                Console.WriteLine("No contact available.");
+                return;
+            }
+            if (contact.FirstName.Equals(firstname, StringComparison.OrdinalIgnoreCase))
+            {
+                contact = null;
+                Console.WriteLine("Contact deleted successfulluy");
+            }
+            else Console.WriteLine("Contact not found with this name");
         }
 
         public void editContact(String firstname)

@@ -1,4 +1,4 @@
-﻿using AddressManagemement.Entity;
+﻿using AddressManagemement.services;
 
 namespace AddressManagemement
 {
@@ -12,7 +12,7 @@ namespace AddressManagemement
             
 
             AdressBook book = new AdressBook();
-            book.editContact(firstName);
+            book.deleteContact(firstName );
             book.DisplayContact();
 
         }

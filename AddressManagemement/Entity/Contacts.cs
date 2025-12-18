@@ -90,19 +90,20 @@ namespace AddressManagemement.Entity
             }
         }
 
-        public Contacts(string firstname, string lastname, string address, string city, string state, string zipcode, string phonenumber, string email)
-        {
-            FirstName = firstname;
-            LastName = lastname;
-            Address = address;
-            City = city;
-            State = state;
-            ZipCode = zipcode;
+        //public Contacts(string firstname, string lastname, string address, string city, string state, string zipcode, string phonenumber, string email)
+        //{
+        //    FirstName = firstname;
+        //    LastName = lastname;
+        //    Address = address;
+        //    City = city;
+        //    State = state;
+        //    ZipCode = zipcode;
 
-            PhoneNumber = phonenumber;
-            Email = email;
+        //    PhoneNumber = phonenumber;
+        //    Email = email;
 
-        }
+        //}
+        
     }
 
 }
