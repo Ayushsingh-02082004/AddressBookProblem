@@ -61,7 +61,7 @@ namespace AddressManagemement.Entity
             get { return phonenumber; }
             set
             {
-                string pattern = @"^[6-9]\d{9}$";
+                string pattern = @"^[6-9]\d{9,}$";
                 if ( Regex.IsMatch(value , pattern))
                 {
                     phonenumber = value;

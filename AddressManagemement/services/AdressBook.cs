@@ -1,89 +1,151 @@
 ﻿using AddressManagemement.Entity;
+using AddressManagemement.Interface;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
+using System.Net;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AddressManagemement.services
 {
-    internal class AdressBook
+    internal class AdressBook : IAdressbook
     {
-        private Contacts contact;
+        private List<Contacts> list = new List<Contacts>();
 
-        public void addContact(Contacts person)
+        public void AddContact()
         {
-            contact = person;
-            Console.WriteLine("Contact added successfully");
+            Console.WriteLine("Enter First Name:");
+            string firstname = Console.ReadLine();
+
+            Console.WriteLine("Enter Last Name:");
+            string lastname = Console.ReadLine();
+
+            Console.WriteLine("Enter Address:");
+            string address = Console.ReadLine();
+
+            Console.WriteLine("Enter City:");
+            string city = Console.ReadLine();
+
+            Console.WriteLine("Enter State:");
+            string state = Console.ReadLine();
+
+            Console.WriteLine("Enter Zip Code:");
+            string zip = Console.ReadLine();
+
+            Console.WriteLine("Enter Phone Number:");
+            string phone = Console.ReadLine();
+
+            Console.WriteLine("Enter Email:");
+            string email = Console.ReadLine();
+
+            // ✅ Constructor called ONCE with proper data
+            Contacts person = new Contacts(
+                firstname,
+                lastname,
+                address,
+                city,
+                state,
+                zip,
+                phone,
+                email
+            );
+
+            list.Add(person);
+            Console.WriteLine("Contact added successfully.");
         }
 
-        public void deleteContact(String firstname)
+        public void DeleteContact(String firstname)
         {
 
-            //HI THIS IS DELETE FILE 
-            if (contact == null || firstname == null)
+            if (list.Count == 0 || firstname == null)
             {
                 Console.WriteLine("No contact available.");
                 return;
             }
-            if (contact.FirstName.Equals(firstname, StringComparison.OrdinalIgnoreCase))
+
+            Contacts contacttodelete = null;
+            foreach(Contacts contact in list)
             {
-                contact = null;
-                Console.WriteLine("Contact deleted successfulluy");
+                if (contact.FirstName.Equals(firstname, StringComparison.OrdinalIgnoreCase))
+                {
+                    contacttodelete = contact;
+                    break;
+                }
+
             }
-            else Console.WriteLine("Contact not found with this name");
+            if (contacttodelete != null)
+            {
+                list.Remove(contacttodelete);
+                Console.WriteLine("Contact deleted successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Contact not found.");
+            }
+
         }
 
-        public void editContact(String firstname)
+        public void EditContact(String firstname)
         {
-            if(firstname == null || contact == null)
+            if(firstname == null || list.Count == 0)
             {
                 Console.WriteLine("No contact available.");
                 return;
             }
-            if (contact.FirstName.Equals(firstname , StringComparison.OrdinalIgnoreCase))
+            foreach (Contacts contact in list)
             {
-                Console.WriteLine("Editing Contact Details:");
+                if(contact.FirstName.Equals(firstname , StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine("Editing Contact Details:");
 
-                Console.Write("Enter New Address: ");
-                contact.Address = Console.ReadLine();
+                    Console.Write("Enter New Address: ");
+                    contact.Address = Console.ReadLine();
 
-                Console.Write("Enter New City: ");
-                contact.City = Console.ReadLine();
+                    Console.Write("Enter New City: ");
+                    contact.City = Console.ReadLine();
 
-                Console.Write("Enter New State: ");
-                contact.State = Console.ReadLine();
+                    Console.Write("Enter New State: ");
+                    contact.State = Console.ReadLine();
 
-                Console.Write("Enter New Zip Code: ");
-                contact.ZipCode = Console.ReadLine();
+                    Console.Write("Enter New Zip Code: ");
+                    contact.ZipCode = Console.ReadLine();
 
-                Console.Write("Enter New Phone Number: ");
-                contact.PhoneNumber = Console.ReadLine();
+                    Console.Write("Enter New Phone Number: ");
+                    contact.PhoneNumber = Console.ReadLine();
 
-                Console.Write("Enter New Email: ");
-                contact.Email = Console.ReadLine();
+                    Console.Write("Enter New Email: ");
+                    contact.Email = Console.ReadLine();
 
-                Console.WriteLine("\nContact updated successfully.");
+                    Console.WriteLine("\nContact updated successfully.");
+                    return;
+                }
             }
-            else Console.WriteLine("There is no contact of this .");
+            Console.WriteLine("There is no contact of this .");
         }
         public void DisplayContact()
         {
-            if (contact == null)
+            if (list.Count == 0)
             {
                 Console.WriteLine("No contact available.");
                 return;
             }
 
-            Console.WriteLine("----- Contact Details -----");
-            Console.WriteLine($"First Name : {contact.FirstName}");
-            Console.WriteLine($"Last Name  : {contact.LastName}");
-            Console.WriteLine($"Address    : {contact.Address}");
-            Console.WriteLine($"City       : {contact.City}");
-            Console.WriteLine($"State      : {contact.State}");
-            Console.WriteLine($"Zip Code   : {contact.ZipCode}");
-            Console.WriteLine($"Phone No   : {contact.PhoneNumber}");
-            Console.WriteLine($"Email      : {contact.Email}");
+            foreach(Contacts contact in list)
+            {
+                Console.WriteLine("----- Contact Details -----");
+                Console.WriteLine($"First Name : {contact.FirstName}");
+                Console.WriteLine($"Last Name  : {contact.LastName}");
+                Console.WriteLine($"Address    : {contact.Address}");
+                Console.WriteLine($"City       : {contact.City}");
+                Console.WriteLine($"State      : {contact.State}");
+                Console.WriteLine($"Zip Code   : {contact.ZipCode}");
+                Console.WriteLine($"Phone No   : {contact.PhoneNumber}");
+                Console.WriteLine($"Email      : {contact.Email}");
+            }
+
         }
 
     }
