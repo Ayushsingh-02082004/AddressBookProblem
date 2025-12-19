@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -102,6 +103,23 @@ namespace AddressManagemement.Entity
             PhoneNumber = phonenumber;
             Email = email;
 
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || obj.GetType() != typeof(Contacts))
+                return false;
+
+            Contacts other = (Contacts)obj;
+
+            return string.Equals(this.FirstName, other.FirstName, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(this.LastName, other.LastName, StringComparison.OrdinalIgnoreCase);
+        }
+
+
+        public override int GetHashCode()
+        {
+            return (firstname.ToLower() + lastname.ToLower()).GetHashCode();
         }
 
     }

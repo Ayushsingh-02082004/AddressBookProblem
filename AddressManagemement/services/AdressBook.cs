@@ -97,6 +97,12 @@ namespace AddressManagemement.services
                 email
             );
 
+            if (list.Contains(person))
+            {
+                Console.WriteLine("List already contains this contact so can not be added again .");
+                return;
+            }
+
             list.Add(person);
             Console.WriteLine("Contact added successfully.");
         }

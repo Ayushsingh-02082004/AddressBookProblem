@@ -6,8 +6,8 @@ namespace AddressManagemement
     {
         static void Main(string[] args)
         {
-            AddressBookSystem system = new AddressBookSystem();
-            system.AdressLibraryOperation();
+            AdressBook system = new AdressBook();
+            system.AdressBookOperation();
         }
     }
 }
