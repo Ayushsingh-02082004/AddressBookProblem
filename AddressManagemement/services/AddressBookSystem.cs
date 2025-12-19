@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AddressManagemement.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,7 +22,9 @@ namespace AddressManagemement.services
                 Console.WriteLine("Press 1 to Enter new Adressbook in library");
                 Console.WriteLine("press 2 to Display books present in the library");
                 Console.WriteLine("Press 3 to Select the book from library");
-                Console.WriteLine("press 4 to Exit from the library");
+                Console.WriteLine("press 4 to search person from city");
+                Console.WriteLine("press 5 to search person from state");
+                Console.WriteLine("press 6 to Exit from the library");
 
                 Console.WriteLine("Choose the option : ");
                 string choice = Console.ReadLine();
@@ -38,6 +41,12 @@ namespace AddressManagemement.services
                         SelectAdressBook();
                         break;
                     case "4":
+                        SearchByCity();
+                        break;
+                    case "5":
+                        SearchByState();
+                        break;
+                    case "6":
                         flag = false;
                         Console.WriteLine("Exited successfully from the library.");
                         break;
@@ -93,6 +102,43 @@ namespace AddressManagemement.services
             }
 
             Console.WriteLine("Adress book not found");
+        }
+
+        public void SearchByCity()
+        {
+            Console.WriteLine("Enter the city name to search by city and if there is no city saved as provided by you then output will be empty .");
+            string city = Console.ReadLine();
+
+            foreach(var entry in AdressLibrary)
+            {
+                AdressBook book = entry.Value;
+                foreach(Contacts contact in book.GetAllContacts())
+                {
+                    if(contact.City.Equals(city, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Console.WriteLine(contact.FirstName + " " +  contact.LastName);
+                    }
+                }
+
+            }
+        }
+
+        public void SearchByState()
+        {
+            Console.WriteLine("Enter the state name to search by state and if there is no state saved as provided by you then output will be empty");
+            String state = Console.ReadLine();
+
+            foreach(var entry in AdressLibrary)
+            {
+                AdressBook book = entry.Value;
+                foreach(Contacts contact in book.GetAllContacts())
+                {
+                    if (contact.State.Equals(state, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Console.WriteLine(contact.FirstName + " " + contact.LastName);
+                    }
+                }
+            }
         }
 
     }

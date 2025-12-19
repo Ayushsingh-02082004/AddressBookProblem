@@ -198,6 +198,10 @@ namespace AddressManagemement.services
             }
 
         }
+        public List<Contacts> GetAllContacts()
+        {
+            return list;
+        }
 
     }
 }
