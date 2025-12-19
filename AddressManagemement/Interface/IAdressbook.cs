@@ -15,7 +15,7 @@ namespace AddressManagemement.Interface
 
         void EditContact(String firstname);
 
-        public abstract void DisplayContact();
+        void DisplayContact();
 
 
     }
