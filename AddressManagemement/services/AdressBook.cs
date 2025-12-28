@@ -26,7 +26,8 @@ namespace AddressManagemement.services
                 Console.WriteLine("Chose 2 for DeletingContat");
                 Console.WriteLine("Chose 3 for EditContact");
                 Console.WriteLine("Chose 4 for DisplayProgram");
-                Console.WriteLine("Chose 5 to stop the program");
+                Console.WriteLine("Chose 5 to sort contact by name alphabetically and print.");
+                Console.WriteLine("Chose 6 to stop the program");
 
                 Console.WriteLine("Choose Option: ");
 
@@ -49,6 +50,9 @@ namespace AddressManagemement.services
                         DisplayContact();
                         break;
                     case "5":
+                        SortContactByName();
+                        break;
+                    case "6":
                         flag = false;
                         Console.WriteLine("program is stopped");
                         break;
@@ -202,6 +206,26 @@ namespace AddressManagemement.services
         {
             return list;
         }
+
+        public void SortContactByName()
+        {
+            if(list.Count == 0)
+            {
+                Console.WriteLine("List count is zero so can not be sorted.");
+                return;
+            }
+
+            var sortedcontact = GetAllContacts().OrderBy(c => c.FirstName, StringComparer.OrdinalIgnoreCase).ThenBy(c => c.LastName , StringComparer.OrdinalIgnoreCase).ToList();
+
+            Console.WriteLine("Contacts sorted alphabetically");
+            foreach(var contact in sortedcontact)
+            {
+                Console.WriteLine(contact); // ToString() is called here.
+            }
+
+        }
+
+        
 
     }
 }
