@@ -27,7 +27,10 @@ namespace AddressManagemement.services
                 Console.WriteLine("Chose 3 for EditContact");
                 Console.WriteLine("Chose 4 for DisplayProgram");
                 Console.WriteLine("Chose 5 to sort contact by name alphabetically and print.");
-                Console.WriteLine("Chose 6 to stop the program");
+                Console.WriteLine("Chose 6 to sort contact by city alphabetically and print.");
+                Console.WriteLine("Chose 7 to sort contact by state alphabetically and print.");
+                Console.WriteLine("Chose 8 to sort contact by zipcode alphabetically and print.");
+                Console.WriteLine("Chose 9 to stop the program");
 
                 Console.WriteLine("Choose Option: ");
 
@@ -53,6 +56,15 @@ namespace AddressManagemement.services
                         SortContactByName();
                         break;
                     case "6":
+                        SortByCity();
+                        break;
+                    case "7":
+                        SortByState();
+                        break;
+                    case "8":
+                        SortByZip();
+                        break;
+                    case "9":
                         flag = false;
                         Console.WriteLine("program is stopped");
                         break;
@@ -223,6 +235,56 @@ namespace AddressManagemement.services
                 Console.WriteLine(contact); // ToString() is called here.
             }
 
+        }
+
+        public void SortByCity()
+        {
+            if(list.Count == 0)
+            {
+                Console.WriteLine("List is empty so can not be sorted");
+                return;
+            }
+
+            var sortedbycity = list.OrderBy(c => c.City , StringComparer.OrdinalIgnoreCase).ThenBy(c => c.FirstName).ToList();
+            Console.WriteLine("Contacts sorted by city");
+            foreach(var contact in sortedbycity)
+            {
+                Console.WriteLine(contact);
+            }
+        }
+
+        public void SortByState()
+        {
+            if (list.Count == 0)
+            {
+                Console.WriteLine("List is empty so can not be sorted");
+                return;
+            }
+
+            var sortedbystate = list.OrderBy(c => c.State, StringComparer.OrdinalIgnoreCase).ThenBy(c => c.FirstName).ToList();
+            Console.WriteLine("Contacts sorted by city");
+
+            foreach(var contact in sortedbystate)
+            {
+                Console.WriteLine(contact);
+            }
+        }
+
+        public void SortByZip()
+        {
+            if(list.Count == 0)
+            {
+                Console.WriteLine("List is empty so can not be sorted");
+                return;
+            }
+
+            var sortedbyZip = list.OrderBy(c => c.ZipCode).ThenBy(c => c.FirstName).ToList();
+            Console.WriteLine("Contacts sorted by zip");
+
+            foreach (var contact in sortedbyZip)
+            {
+                Console.WriteLine(contact);
+            }
         }
 
         

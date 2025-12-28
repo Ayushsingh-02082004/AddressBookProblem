@@ -122,6 +122,11 @@ namespace AddressManagemement.Entity
             return (firstname.ToLower() + lastname.ToLower()).GetHashCode();
         }
 
+        public override string ToString()
+        {
+            return $"Name: {FirstName} {LastName}, Address: {Address}, City: {City}, State: {State}, Zip: {ZipCode}, Phone: {PhoneNumber}, Email: {Email}";
+        }
+
     }
 
 }
