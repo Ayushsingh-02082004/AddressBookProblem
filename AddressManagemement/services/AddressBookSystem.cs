@@ -12,6 +12,11 @@ namespace AddressManagemement.services
 
         private Dictionary<String , AdressBook> AdressLibrary = new Dictionary<String , AdressBook>(StringComparer.OrdinalIgnoreCase);
 
+        private Dictionary<String, List<Contacts>> CityiDictionary = new Dictionary<string, List<Contacts>>(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<String, List<Contacts>> StateDictionary = new Dictionary<string, List<Contacts>>(StringComparer.OrdinalIgnoreCase);
+
+
+
         public void AdressLibraryOperation()
         {
             bool flag = true;
@@ -24,7 +29,9 @@ namespace AddressManagemement.services
                 Console.WriteLine("Press 3 to Select the book from library");
                 Console.WriteLine("press 4 to search person from city");
                 Console.WriteLine("press 5 to search person from state");
-                Console.WriteLine("press 6 to Exit from the library");
+                Console.WriteLine("press 6 to view all person in a city");
+                Console.WriteLine("press 7 to view all person in a state");
+                Console.WriteLine("press 8 to Exit from the library");
 
                 Console.WriteLine("Choose the option : ");
                 string choice = Console.ReadLine();
@@ -47,6 +54,12 @@ namespace AddressManagemement.services
                         SearchByState();
                         break;
                     case "6":
+                        ViewPersonByCity();
+                        break;
+                    case "7":
+                        ViewPersonByState();
+                        break;
+                    case "8":
                         flag = false;
                         Console.WriteLine("Exited successfully from the library.");
                         break;
@@ -60,7 +73,6 @@ namespace AddressManagemement.services
 
         private void AddnewAdressBook()
         {
-
             Console.WriteLine("Enter the name of adressbook : ");
             String name = Console.ReadLine();
 
@@ -102,6 +114,65 @@ namespace AddressManagemement.services
             }
 
             Console.WriteLine("Adress book not found");
+        }
+
+        private void BuildCityStateDictionary()
+        {
+            CityiDictionary.Clear();
+            StateDictionary.Clear();
+
+            foreach(var entry in AdressLibrary)
+            {
+                foreach(Contacts contact in entry.Value.GetAllContacts())
+                {
+                    //city
+                    if (!CityiDictionary.ContainsKey(contact.City))
+                    {
+                        CityiDictionary[contact.City] = new List<Contacts>();
+                    }
+                    CityiDictionary[contact.City].Add(contact);
+
+                    //state
+                    if (!StateDictionary.ContainsKey(contact.State))
+                    {
+                        StateDictionary[contact.State] = new List<Contacts>();
+                    }
+                    StateDictionary[contact.State].Add(contact);
+                }
+            }
+        }
+
+        public void ViewPersonByCity()
+        {
+            BuildCityStateDictionary();
+            Console.WriteLine("Enter City Name : ");
+            String city = Console.ReadLine();
+
+            if (CityiDictionary.ContainsKey(city))
+            {
+                foreach (Contacts contact in CityiDictionary[city])
+                {
+                    Console.WriteLine(contact.FirstName + " " + contact.LastName);
+                }
+            }
+
+            else Console.WriteLine($"There is no city of name {city}");
+        }
+
+        public void ViewPersonByState()
+        {
+            BuildCityStateDictionary();
+            Console.WriteLine("Enter the State Name : ");
+
+            String state = Console.ReadLine();
+            if (StateDictionary.ContainsKey(state))
+            {
+                foreach (Contacts contact in StateDictionary[state])
+                {
+                    Console.WriteLine(contact.FirstName + " " + contact.LastName);
+                }
+            }
+            else Console.WriteLine($"There is no state of name {state}");
         }
 
         public void SearchByCity()
