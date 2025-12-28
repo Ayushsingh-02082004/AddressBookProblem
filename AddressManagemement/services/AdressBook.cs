@@ -237,7 +237,7 @@ namespace AddressManagemement.services
 
         }
 
-        public void SortByCity()
+        public void SortByCity() //uc12
         {
             if(list.Count == 0)
             {
@@ -253,7 +253,7 @@ namespace AddressManagemement.services
             }
         }
 
-        public void SortByState()
+        public void SortByState()//uc12
         {
             if (list.Count == 0)
             {
@@ -270,7 +270,7 @@ namespace AddressManagemement.services
             }
         }
 
-        public void SortByZip()
+        public void SortByZip()  //uc12
         {
             if(list.Count == 0)
             {
