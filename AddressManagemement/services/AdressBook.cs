@@ -12,6 +12,8 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Text.Json;
+
 
 
 namespace AddressManagemement.services
@@ -21,6 +23,7 @@ namespace AddressManagemement.services
 
         private const string filePath = @"D:\BridgeLabs\Adressbook\adressbookdata\adressbook.txt";
         private const string csvFilePath = @"D:\BridgeLabs\Adressbook\adressbookdata\adressbook.csv";
+        private const string jsonFilePath = @"D:\BridgeLabs\Adressbook\adressbookdata\AddressBook.json";
 
         private List<Contacts> list = new List<Contacts>();
 
@@ -44,7 +47,9 @@ namespace AddressManagemement.services
                 Console.WriteLine("chose 10 to write contact to file");
                 Console.WriteLine("chose 11 to read contact from csvfile");
                 Console.WriteLine("chose 12 to write contact to csvfile");
-                Console.WriteLine("Chose 13 to stop the program");
+                Console.WriteLine("chose 13 to read contact from JsonFile");
+                Console.WriteLine("chose 14 to write contact to JsonFile");
+                Console.WriteLine("Chose 15 to stop the program");
                 Console.WriteLine("Choose Option: ");
 
                 String choice = Console.ReadLine();
@@ -90,6 +95,12 @@ namespace AddressManagemement.services
                         WriteCsvFile();
                         break;
                     case "13":
+                        ReadContactsFromJson();
+                        break;
+                    case "14":
+                        WriteContactsToJson();
+                        break;
+                    case "15":
                         flag = false;
                         Console.WriteLine("program is stopped");
                         break;
@@ -407,6 +418,52 @@ namespace AddressManagemement.services
             Console.WriteLine("Contacts loaded from AddressBook.csv successfully.");
             DisplayContact();
         }
+
+        /////////////-------UC15---------------///////////
+        ///
+        public void WriteContactsToJson()
+        {
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true   // pretty JSON
+            };
+
+            string json = JsonSerializer.Serialize(list, options);
+            File.WriteAllText(jsonFilePath, json);
+
+            Console.WriteLine("Contacts saved to AddressBook.json successfully.");
+        }
+
+        public void ReadContactsFromJson()
+        {
+            if (!File.Exists(jsonFilePath))
+            {
+                Console.WriteLine("AddressBook.json file not found.");
+                return;
+            }
+
+            string json = File.ReadAllText(jsonFilePath);
+
+            List<Contacts>? contacts =
+                JsonSerializer.Deserialize<List<Contacts>>(json);
+
+            if (contacts == null)
+            {
+                Console.WriteLine("No contacts found in JSON file.");
+                return;
+            }
+
+            list.Clear();
+
+            foreach (var contact in contacts)
+            {
+                list.Add(contact);   // direct restore
+            }
+
+            Console.WriteLine("Contacts loaded from AddressBook.json successfully.");
+            DisplayContact();
+        }
+
 
 
     }
