@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AddressManagemement.ExceptionHandle
 {
-    internal class EmailException : Exception
+    public class EmailException : Exception
     {
         public EmailException(String msg):base(msg) { }
     }

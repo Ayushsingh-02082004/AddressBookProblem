@@ -11,7 +11,7 @@ namespace AddressManagemement.Interface
     {
         void AddContact();
 
-        void DeleteContact(String firstname);
+        //void DeleteContact(String firstname);
 
         void EditContact(String firstname);
 

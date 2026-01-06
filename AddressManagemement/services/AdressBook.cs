@@ -8,12 +8,16 @@ using System.Net;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+
 
 namespace AddressManagemement.services
 {
-    internal class AdressBook : IAdressbook
+    public class AdressBook : IAdressbook
     {
+        private const string filePath = @"D:\BridgeLabs\Adressbook\adressbookdata\adressbook.txt";
         private List<Contacts> list = new List<Contacts>();
+
 
         public void AdressBookOperation()
         {
@@ -30,8 +34,9 @@ namespace AddressManagemement.services
                 Console.WriteLine("Chose 6 to sort contact by city alphabetically and print.");
                 Console.WriteLine("Chose 7 to sort contact by state alphabetically and print.");
                 Console.WriteLine("Chose 8 to sort contact by zipcode alphabetically and print.");
-                Console.WriteLine("Chose 9 to stop the program");
-
+                Console.WriteLine("chose 9 to read contact from file");
+                Console.WriteLine("chose 10 to write contact to file");
+                Console.WriteLine("Chose 11 to stop the program");
                 Console.WriteLine("Choose Option: ");
 
                 String choice = Console.ReadLine();
@@ -65,6 +70,12 @@ namespace AddressManagemement.services
                         SortByZip();
                         break;
                     case "9":
+                        ReadContactsFromFile();
+                        break;
+                    case "10":
+                        WriteContactsToFile();
+                        break;
+                    case "11":
                         flag = false;
                         Console.WriteLine("program is stopped");
                         break;
@@ -72,6 +83,16 @@ namespace AddressManagemement.services
                         Console.WriteLine("Invalid choice.");
                         break;
                 }
+            }
+        }
+
+        public void AddContact(Contacts contact)
+        {
+            if (contact == null) return;
+
+            if (!list.Any(c => c.FirstName.ToLower().Equals(contact.FirstName.ToLower())))
+            {
+                list.Add(contact);
             }
         }
 
@@ -113,45 +134,19 @@ namespace AddressManagemement.services
                 email
             );
 
-            if (list.Contains(person))
-            {
-                Console.WriteLine("List already contains this contact so can not be added again .");
-                return;
-            }
-
-            list.Add(person);
+             // ✅ IMPORTANT: delegate to logic method
+            AddContact(person);
             Console.WriteLine("Contact added successfully.");
         }
 
-        public void DeleteContact(String firstname)
+        public bool DeleteContact(String firstname)
         {
 
-            if (list.Count == 0 || firstname == null)
-            {
-                Console.WriteLine("No contact available.");
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(firstname)) return false;
 
-            Contacts contacttodelete = null;
-            foreach(Contacts contact in list)
-            {
-                if (contact.FirstName.Equals(firstname, StringComparison.OrdinalIgnoreCase))
-                {
-                    contacttodelete = contact;
-                    break;
-                }
+            int removedCount = list.RemoveAll(c => c.FirstName.Equals(firstname, StringComparison.OrdinalIgnoreCase));
 
-            }
-            if (contacttodelete != null)
-            {
-                list.Remove(contacttodelete);
-                Console.WriteLine("Contact deleted successfully.");
-            }
-            else
-            {
-                Console.WriteLine("Contact not found.");
-            }
-
+            return removedCount > 0;
         }
 
         public void EditContact(String firstname)
@@ -214,9 +209,9 @@ namespace AddressManagemement.services
             }
 
         }
-        public List<Contacts> GetAllContacts()
+        public IReadOnlyList<Contacts> GetAllContacts()
         {
-            return list;
+            return list.AsReadOnly();
         }
 
         public void SortContactByName()
@@ -235,6 +230,14 @@ namespace AddressManagemement.services
                 Console.WriteLine(contact); // ToString() is called here.
             }
 
+        }
+
+        public List<Contacts> GetContactsSortedByName()
+        {
+            return list
+                .OrderBy(c => c.FirstName, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(c => c.LastName, StringComparer.OrdinalIgnoreCase)
+                .ToList();
         }
 
         public void SortByCity() //uc12
@@ -287,7 +290,58 @@ namespace AddressManagemement.services
             }
         }
 
-        
+
+        ////////---------------UC13--------------///////////
+
+        public void WriteContactsToFile()
+        {
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                foreach (var contact in list)
+                {
+                    writer.WriteLine(
+                        $"{contact.FirstName}|{contact.LastName}|{contact.Address}|" +
+                        $"{contact.City}|{contact.State}|{contact.ZipCode}|" +
+                        $"{contact.PhoneNumber}|{contact.Email}"
+                    );
+                }
+            }
+
+            Console.WriteLine("Contacts saved to AddressBook.txt successfully.");
+        }
+
+
+        public void ReadContactsFromFile()
+        {
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("AddressBook.txt file not found.");
+                return;
+            }
+
+            list.Clear();
+
+            foreach (string line in File.ReadAllLines(filePath))
+            {
+                if (string.IsNullOrWhiteSpace(line)) continue;
+
+                string[] data = line.Split('|');
+                if (data.Length != 8) continue;
+
+                Contacts contact = new Contacts(
+                    data[0], data[1], data[2], data[3],
+                    data[4], data[5], data[6], data[7]
+                );
+
+                AddContact(contact);
+                
+            }
+            Console.WriteLine("Contacts loaded from AddressBook.txt successfully.");
+            DisplayContact();
+        }
+
+
+
 
     }
 }

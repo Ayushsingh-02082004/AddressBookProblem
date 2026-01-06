@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="../TestCasesAdressBook/TestCasesAdressBook.csproj" Id="464998f7-7d8f-4b64-9049-038f874f1e50" />
   <Project Path="AddressManagemement.csproj" />
 </Solution>

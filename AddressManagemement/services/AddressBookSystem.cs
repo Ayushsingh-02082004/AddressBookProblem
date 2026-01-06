@@ -7,15 +7,12 @@ using System.Threading.Tasks;
 
 namespace AddressManagemement.services
 {
-    internal class AddressBookSystem
+    public class AddressBookSystem
     {
 
         private Dictionary<String , AdressBook> AdressLibrary = new Dictionary<String , AdressBook>(StringComparer.OrdinalIgnoreCase);
-
         private Dictionary<String, List<Contacts>> CityiDictionary = new Dictionary<string, List<Contacts>>(StringComparer.OrdinalIgnoreCase);
         private Dictionary<String, List<Contacts>> StateDictionary = new Dictionary<string, List<Contacts>>(StringComparer.OrdinalIgnoreCase);
-
-
 
         public void AdressLibraryOperation()
         {

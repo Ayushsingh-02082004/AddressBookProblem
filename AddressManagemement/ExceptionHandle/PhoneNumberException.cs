@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AddressManagemement.ExceptionHandle
 {
-    internal class PhoneNumberException: Exception
+    public class PhoneNumberException: Exception
     {
         public PhoneNumberException(string msg):base(msg) { }
     }
