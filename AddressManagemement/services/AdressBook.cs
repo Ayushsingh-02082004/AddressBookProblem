@@ -318,25 +318,24 @@ namespace AddressManagemement.services
 
         ////////---------------UC13--------------///////////
 
-        public void WriteContactsToFile()
+        public async Task WriteContactsToFile()
         {
-            using (StreamWriter writer = new StreamWriter(filePath))
+            using StreamWriter writer = new StreamWriter(filePath);
+
+            foreach (var contact in list)
             {
-                foreach (var contact in list)
-                {
-                    writer.WriteLine(
-                        $"{contact.FirstName}|{contact.LastName}|{contact.Address}|" +
-                        $"{contact.City}|{contact.State}|{contact.ZipCode}|" +
-                        $"{contact.PhoneNumber}|{contact.Email}"
-                    );
-                }
+                await writer.WriteLineAsync(
+                    $"{contact.FirstName}|{contact.LastName}|{contact.Address}|" +
+                    $"{contact.City}|{contact.State}|{contact.ZipCode}|" +
+                    $"{contact.PhoneNumber}|{contact.Email}"
+                );
             }
 
             Console.WriteLine("Contacts saved to AddressBook.txt successfully.");
         }
 
 
-        public void ReadContactsFromFile()
+        public async Task ReadContactsFromFile()
         {
             if (!File.Exists(filePath))
             {
@@ -346,48 +345,50 @@ namespace AddressManagemement.services
 
             list.Clear();
 
-            foreach (string line in File.ReadAllLines(filePath))
+            string[] lines = await File.ReadAllLinesAsync(filePath);
+
+            foreach (string line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line)) continue;
 
                 string[] data = line.Split('|');
                 if (data.Length != 8) continue;
 
-                Contacts contact = new Contacts(
+                list.Add(new Contacts(
                     data[0], data[1], data[2], data[3],
                     data[4], data[5], data[6], data[7]
-                );
-
-                AddContact(contact);
-                
+                ));
             }
+
             Console.WriteLine("Contacts loaded from AddressBook.txt successfully.");
             DisplayContact();
         }
 
+
         /////////////////--------------UC14-----------------------/////////////
 
 
-        public void WriteCsvFile()
+        public async Task WriteCsvFile()
         {
-            using (StreamWriter writer = new StreamWriter(csvFilePath))
-            {
-                // CSV Header
-                writer.WriteLine("FirstName,LastName,Address,City,State,ZipCode,PhoneNumber,Email");
+            using StreamWriter writer = new StreamWriter(csvFilePath);
 
-                foreach (var contact in list)   // ✅ USE list
-                {
-                    writer.WriteLine(
-                        $"{contact.FirstName},{contact.LastName},{contact.Address}," +
-                        $"{contact.City},{contact.State},{contact.ZipCode}," +
-                        $"{contact.PhoneNumber},{contact.Email}"
-                    );
-                }
+            await writer.WriteLineAsync(
+                "FirstName,LastName,Address,City,State,ZipCode,PhoneNumber,Email");
+
+            foreach (var contact in list)
+            {
+                await writer.WriteLineAsync(
+                    $"{contact.FirstName},{contact.LastName},{contact.Address}," +
+                    $"{contact.City},{contact.State},{contact.ZipCode}," +
+                    $"{contact.PhoneNumber},{contact.Email}"
+                );
             }
+
             Console.WriteLine("Contacts saved to AddressBook.csv successfully.");
         }
 
-        public void ReadCsvFile()
+
+        public async Task ReadCsvFile()
         {
             if (!File.Exists(csvFilePath))
             {
@@ -397,9 +398,8 @@ namespace AddressManagemement.services
 
             list.Clear();
 
-            string[] lines = File.ReadAllLines(csvFilePath);
+            string[] lines = await File.ReadAllLinesAsync(csvFilePath);
 
-            // start from index 1 to skip header
             for (int i = 1; i < lines.Length; i++)
             {
                 if (string.IsNullOrWhiteSpace(lines[i])) continue;
@@ -407,34 +407,31 @@ namespace AddressManagemement.services
                 string[] data = lines[i].Split(',');
                 if (data.Length != 8) continue;
 
-                Contacts contact = new Contacts(
+                list.Add(new Contacts(
                     data[0], data[1], data[2], data[3],
                     data[4], data[5], data[6], data[7]
-                );
-
-                AddContact(contact); // prevents duplicate first names
+                ));
             }
 
             Console.WriteLine("Contacts loaded from AddressBook.csv successfully.");
             DisplayContact();
         }
 
+
         /////////////-------UC15---------------///////////
         ///
-        public void WriteContactsToJson()
+        public async Task WriteContactsToJson()
         {
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true   // pretty JSON
-            };
+            var options = new JsonSerializerOptions { WriteIndented = true };
 
             string json = JsonSerializer.Serialize(list, options);
-            File.WriteAllText(jsonFilePath, json);
+            await File.WriteAllTextAsync(jsonFilePath, json);
 
             Console.WriteLine("Contacts saved to AddressBook.json successfully.");
         }
 
-        public void ReadContactsFromJson()
+
+        public async Task ReadContactsFromJson()  ////used sync and async for uc 17
         {
             if (!File.Exists(jsonFilePath))
             {
@@ -442,29 +439,22 @@ namespace AddressManagemement.services
                 return;
             }
 
-            string json = File.ReadAllText(jsonFilePath);
+            string json = await File.ReadAllTextAsync(jsonFilePath);
 
             List<Contacts>? contacts =
                 JsonSerializer.Deserialize<List<Contacts>>(json);
 
-            if (contacts == null)
-            {
-                Console.WriteLine("No contacts found in JSON file.");
-                return;
-            }
+            if (contacts == null) return;
 
             list.Clear();
-
-            foreach (var contact in contacts)
-            {
-                list.Add(contact);   // direct restore
-            }
+            list.AddRange(contacts);
 
             Console.WriteLine("Contacts loaded from AddressBook.json successfully.");
             DisplayContact();
         }
 
 
+        //////////// -------------UC16---------Already Done
 
     }
 }
