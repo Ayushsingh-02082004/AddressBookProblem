@@ -1,5 +1,8 @@
 ﻿using AddressManagemement.Entity;
 using AddressManagemement.Interface;
+using CsvHelper;
+using System.Globalization;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -15,7 +18,10 @@ namespace AddressManagemement.services
 {
     public class AdressBook : IAdressbook
     {
+
         private const string filePath = @"D:\BridgeLabs\Adressbook\adressbookdata\adressbook.txt";
+        private const string csvFilePath = @"D:\BridgeLabs\Adressbook\adressbookdata\adressbook.csv";
+
         private List<Contacts> list = new List<Contacts>();
 
 
@@ -36,7 +42,9 @@ namespace AddressManagemement.services
                 Console.WriteLine("Chose 8 to sort contact by zipcode alphabetically and print.");
                 Console.WriteLine("chose 9 to read contact from file");
                 Console.WriteLine("chose 10 to write contact to file");
-                Console.WriteLine("Chose 11 to stop the program");
+                Console.WriteLine("chose 11 to read contact from csvfile");
+                Console.WriteLine("chose 12 to write contact to csvfile");
+                Console.WriteLine("Chose 13 to stop the program");
                 Console.WriteLine("Choose Option: ");
 
                 String choice = Console.ReadLine();
@@ -76,6 +84,12 @@ namespace AddressManagemement.services
                         WriteContactsToFile();
                         break;
                     case "11":
+                        ReadCsvFile();
+                        break;
+                    case "12":
+                        WriteCsvFile();
+                        break;
+                    case "13":
                         flag = false;
                         Console.WriteLine("program is stopped");
                         break;
@@ -340,7 +354,59 @@ namespace AddressManagemement.services
             DisplayContact();
         }
 
+        /////////////////--------------UC14-----------------------/////////////
 
+
+        public void WriteCsvFile()
+        {
+            using (StreamWriter writer = new StreamWriter(csvFilePath))
+            {
+                // CSV Header
+                writer.WriteLine("FirstName,LastName,Address,City,State,ZipCode,PhoneNumber,Email");
+
+                foreach (var contact in list)   // ✅ USE list
+                {
+                    writer.WriteLine(
+                        $"{contact.FirstName},{contact.LastName},{contact.Address}," +
+                        $"{contact.City},{contact.State},{contact.ZipCode}," +
+                        $"{contact.PhoneNumber},{contact.Email}"
+                    );
+                }
+            }
+            Console.WriteLine("Contacts saved to AddressBook.csv successfully.");
+        }
+
+        public void ReadCsvFile()
+        {
+            if (!File.Exists(csvFilePath))
+            {
+                Console.WriteLine("AddressBook.csv file not found.");
+                return;
+            }
+
+            list.Clear();
+
+            string[] lines = File.ReadAllLines(csvFilePath);
+
+            // start from index 1 to skip header
+            for (int i = 1; i < lines.Length; i++)
+            {
+                if (string.IsNullOrWhiteSpace(lines[i])) continue;
+
+                string[] data = lines[i].Split(',');
+                if (data.Length != 8) continue;
+
+                Contacts contact = new Contacts(
+                    data[0], data[1], data[2], data[3],
+                    data[4], data[5], data[6], data[7]
+                );
+
+                AddContact(contact); // prevents duplicate first names
+            }
+
+            Console.WriteLine("Contacts loaded from AddressBook.csv successfully.");
+            DisplayContact();
+        }
 
 
     }
