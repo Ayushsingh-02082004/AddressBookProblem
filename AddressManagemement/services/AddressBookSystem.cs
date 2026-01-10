@@ -1,6 +1,8 @@
 ﻿using AddressManagemement.Entity;
+using AddressManagemement.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +15,13 @@ namespace AddressManagemement.services
         private Dictionary<String , AdressBook> AdressLibrary = new Dictionary<String , AdressBook>(StringComparer.OrdinalIgnoreCase);
         private Dictionary<String, List<Contacts>> CityiDictionary = new Dictionary<string, List<Contacts>>(StringComparer.OrdinalIgnoreCase);
         private Dictionary<String, List<Contacts>> StateDictionary = new Dictionary<string, List<Contacts>>(StringComparer.OrdinalIgnoreCase);
+
+        private readonly IAddressBookDataSource dataSource;
+
+        public AddressBookSystem(IAddressBookDataSource source)
+        {
+            dataSource = source;
+        }
 
         public void AdressLibraryOperation()
         {
@@ -81,13 +90,13 @@ namespace AddressManagemement.services
             Console.WriteLine("Enter the name of adressbook : ");
             String name = Console.ReadLine();
 
-            if(AdressLibrary.ContainsKey( name))
+            if (AdressLibrary.ContainsKey(name))
             {
                 Console.WriteLine("Adress book already exists.");
                 return;
             }
 
-            AdressLibrary[name] = new AdressBook();
+            AdressLibrary[name] = new AdressBook(dataSource);
             Console.WriteLine("Adress book added successfully.");
         }
 

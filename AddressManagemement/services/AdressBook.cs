@@ -18,7 +18,7 @@ using System.Text.Json;
 
 namespace AddressManagemement.services
 {
-    public class AdressBook : IAdressbook
+    public class AdressBook : IAdressbook 
     {
 
         private const string filePath = @"D:\BridgeLabs\Adressbook\adressbookdata\adressbook.txt";
@@ -26,6 +26,13 @@ namespace AddressManagemement.services
         private const string jsonFilePath = @"D:\BridgeLabs\Adressbook\adressbookdata\AddressBook.json";
 
         private List<Contacts> list = new List<Contacts>();
+
+        private readonly IAddressBookDataSource dataSource;
+
+        public AdressBook(IAddressBookDataSource source)
+        {
+            dataSource = source;
+        }
 
 
         public void AdressBookOperation()
@@ -49,7 +56,9 @@ namespace AddressManagemement.services
                 Console.WriteLine("chose 12 to write contact to csvfile");
                 Console.WriteLine("chose 13 to read contact from JsonFile");
                 Console.WriteLine("chose 14 to write contact to JsonFile");
-                Console.WriteLine("Chose 15 to stop the program");
+                Console.WriteLine("chose 15 to Save contact in Database");
+                Console.WriteLine("chose 16 to Load contact from database");
+                Console.WriteLine("Chose 17 to stop the program");
                 Console.WriteLine("Choose Option: ");
 
                 String choice = Console.ReadLine();
@@ -101,6 +110,12 @@ namespace AddressManagemement.services
                         WriteContactsToJson();
                         break;
                     case "15":
+                        SaveToSource();
+                        break;
+                    case "16":
+                        LoadFromSource();
+                        break;
+                    case "17":
                         flag = false;
                         Console.WriteLine("program is stopped");
                         break;
@@ -455,6 +470,24 @@ namespace AddressManagemement.services
 
 
         //////////// -------------UC16---------Already Done
+
+
+        ////////////-------------UUUUUCCCCC 18----------------------///////////////////
+
+        public void SaveToSource()
+        {
+            dataSource.Save(list);
+        }
+
+        public void LoadFromSource()
+        {
+            list = dataSource.Load();
+        }
+
+
+
+
+
 
     }
 }
